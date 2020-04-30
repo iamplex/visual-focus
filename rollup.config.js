@@ -11,7 +11,7 @@ export default {
     {
       file: 'dist/focus.umd.js',
       format: 'umd',
-      name: 'focus',
+      name: 'vfocus',
     },
   ],
 
