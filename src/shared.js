@@ -7,6 +7,7 @@ export function createCanvasContext2D(size) {
   context.canvas.style.top = 0
   context.canvas.style.display = 'block'
   context.canvas.style.cursor = 'none'
+  context.canvas.style.zIndex = 99999
 
   context.canvas.style.width = size[0] + 'px'
   context.canvas.style.height = size[1] + 'px'
