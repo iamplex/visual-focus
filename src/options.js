@@ -3,7 +3,7 @@
  */
 
 export default {
-  container: document.documentElement,
+  container: document.body,
   size: 85,
   focusColor: 'rgba(0, 0, 0, 0)',
   backgroundColor: 'rgba(0, 0, 0, 0.85)',
