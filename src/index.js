@@ -5,47 +5,53 @@ class focus {
   constructor(options) {
     this.focusMode = false
     this.deltaScrollY = 0
-    this.pointrCoords = [0, 0]
+    this.pointrCoord = [0, 0]
 
     this.options = Object.assign(defaultOptions, options || {})
-    this.continuousMode = this.options.continuousMode
     this.container = this.options.container
+    this.hotKey = this.options.hotKey
+    this.continuousMode = this.options.continuousMode
 
     const rect = this.container.getBoundingClientRect()
     this.ctx = createCanvasContext2D([rect.width, rect.height])
     this.canvas = this.ctx.canvas
 
-    this.canvas.addEventListener('pointermove', this.pointermove, false)
+    // this.canvas.addEventListener('pointermove', this.pointermove, false)
+    this.container.addEventListener('pointermove', this.pointermove, false)
     window.addEventListener('scroll', this.scroll, false)
-    window.addEventListener('keydown', this.keydown, false)
+
+    this.hotKey && window.addEventListener('keydown', this.keydown, false)
   }
 
   pointermove = (event) => {
-    this.pointrCoords = [event.clientX, event.clientY + window.scrollY]
+    this.pointrCoord = [event.clientX, event.clientY + window.scrollY]
     this.focusMode && this.render()
   }
 
   scroll = () => {
-    this.pointrCoords[1] += window.scrollY - this.deltaScrollY
+    this.pointrCoord[1] += window.scrollY - this.deltaScrollY
     this.deltaScrollY = window.scrollY
     this.focusMode && this.render()
   }
 
   keydown = (event) => {
-    if (event.ctrlKey === true) {
+    if (this.continuousMode === false && event.key === this.hotKey) {
       this.focusMode = !this.focusMode
-
-      if (this.focusMode) {
-        this.container.appendChild(this.canvas)
-        this.render()
-      } else {
-        this.container.removeChild(this.canvas)
-      }
+      this.focusMode ? this.onFocus() : this.offFocus()
     }
   }
 
   keyup = (event) => {
     // TODO: support for continuous mode
+  }
+
+  onFocus() {
+    this.container.appendChild(this.canvas)
+    this.render()
+  }
+
+  offFocus() {
+    this.container.removeChild(this.canvas)
   }
 
   clear() {
@@ -71,13 +77,13 @@ class focus {
   }
 
   renderBackground() {
-    const { pointrCoords, canvas, ctx, options } = this
+    const { pointrCoord, canvas, ctx, options } = this
 
     ctx.beginPath()
 
     ctx.arc(
-      pointrCoords[0],
-      pointrCoords[1],
+      pointrCoord[0],
+      pointrCoord[1],
       options.size || defaultOptions.size,
       0,
       2 * Math.PI
@@ -90,11 +96,11 @@ class focus {
   }
 
   renderFocus() {
-    const { pointrCoords, ctx, options } = this
+    const { pointrCoord, ctx, options } = this
 
     ctx.beginPath()
 
-    ctx.arc(pointrCoords[0], pointrCoords[1], options.size, 0, 2 * Math.PI)
+    ctx.arc(pointrCoord[0], pointrCoord[1], options.size, 0, 2 * Math.PI)
     ctx.fillStyle = options.focusColor
     ctx.fill()
 
@@ -102,10 +108,12 @@ class focus {
   }
 
   destory() {
-    this.canvas.removeEventListener('pointermove', this.pointermove, false)
-    this.container.removeChild(this.canvas)
+    // this.canvas.removeEventListener('pointermove', this.pointermove, false)
+    this.container.removeEventListener('pointermove', this.pointermove, false)
     window.removeEventListener('scroll', this.scroll, false)
     window.removeEventListener('keydown', this.keydown, false)
+
+    this.focusMode && this.container.removeChild(this.canvas)
   }
 }
 
