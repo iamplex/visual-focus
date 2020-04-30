@@ -3,6 +3,9 @@
   "version": "0.0.5",
   "description": "A plugins used for focus somewhere",
   "main": "dist/focus.js",
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "focus",
     "visual",
