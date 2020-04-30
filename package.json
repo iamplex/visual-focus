@@ -1,14 +1,20 @@
 {
-  "name": "focus",
+  "name": "visual-focus",
   "version": "0.0.4",
-  "description": "",
+  "description": "A plugins used for focus somewhere",
   "main": "dist/focus.js",
+  "keywords": [
+    "focus",
+    "visual",
+    "canvas",
+    "javascript"
+  ],
   "scripts": {
     "test": "jest -c jest.config.js",
     "start": "npx http-server -o & rollup -wc rollup.config.js",
     "build": "rollup -c rollup.config.js"
   },
-  "author": "iamplex",
+  "author": "iamplex <panjing.binary@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@babel/preset-env": "^7.9.5",
