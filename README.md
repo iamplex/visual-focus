@@ -1,13 +1,13 @@
 # visual focus
 
 Help you keep everyone's focus where you want to explain on browser
-![gif](https://iamplex.github.io/visual-focus/assets/visual-focus.gif)
+![gif](https://github.com/iamplex/visual-focus/blob/master/assets/visual-focus.gif)
 
 ## Check it out
 
 The easiest way to try it is along devtools
 
-![gif](https://iamplex.github.io/visual-focus/assets/getting-start.gif)
+![gif](https://github.com/iamplex/visual-focus/blob/master/assets/getting-start.gif)
 
 ```js
 var script = document.createElement('script')
