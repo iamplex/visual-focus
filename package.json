@@ -2,7 +2,7 @@
   "name": "visual-focus",
   "version": "0.0.9",
   "description": "A plugins used for focus somewhere",
-  "main": "dist/focus.js",
+  "main": "dist/v-focus.js",
   "files": [
     "dist"
   ],
@@ -15,7 +15,7 @@
   "scripts": {
     "test": "jest -c jest.config.js",
     "start": "npx http-server -o & rollup -wc rollup.config.js",
-    "build": "rollup -c rollup.config.js"
+    "build": "npm run test && rollup -c rollup.config.js"
   },
   "author": "iamplex <panjing.binary@gmail.com>",
   "license": "ISC",

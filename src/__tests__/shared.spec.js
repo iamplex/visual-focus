@@ -14,7 +14,7 @@ describe('shared', function () {
     expect(canvas.style.top).toEqual(0 + 'px')
     expect(canvas.style.display).toEqual('block')
     expect(canvas.style.cursor).toEqual('none')
-    expect(canvas.style.zIndex).toEqual(9999)
+    expect(canvas.style.zIndex).toEqual('99999')
   })
 
   it('create context.canvas with custom size', function () {

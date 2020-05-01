@@ -5,11 +5,11 @@ export default {
 
   output: [
     {
-      file: 'dist/focus.js',
+      file: 'dist/v-focus.js',
       format: 'esm',
     },
     {
-      file: 'dist/focus.umd.js',
+      file: 'dist/v-focus.umd.js',
       format: 'umd',
       name: 'vfocus',
     },

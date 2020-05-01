@@ -1,7 +1,7 @@
 import defaultOptions from './options.js'
 import { createCanvasContext2D } from './shared.js'
 
-class focus {
+class vfocus {
   constructor(options) {
     this.focusMode = false
     this.deltaScrollY = 0
@@ -16,11 +16,12 @@ class focus {
     this.ctx = createCanvasContext2D([rect.width, rect.height])
     this.canvas = this.ctx.canvas
 
-    // this.canvas.addEventListener('pointermove', this.pointermove, false)
     this.container.addEventListener('pointermove', this.pointermove, false)
     window.addEventListener('scroll', this.scroll, false)
 
-    this.hotKey && window.addEventListener('keydown', this.keydown, false)
+    if (this.hotKey) window.addEventListener('keydown', this.keydown, false)
+    if (this.hotKey && this.continuousMode)
+      window.addEventListener('keyup', this.keyup, false)
   }
 
   pointermove = (event) => {
@@ -35,22 +36,24 @@ class focus {
   }
 
   keydown = (event) => {
-    if (this.continuousMode === false && event.key === this.hotKey) {
-      this.focusMode = !this.focusMode
-      this.focusMode ? this.onFocus() : this.offFocus()
-    }
+    if (event.key === this.hotKey) this.triggerMode()
   }
 
   keyup = (event) => {
-    // TODO: support for continuous mode
+    if (this.continuousMode && event.key === this.hotKey) this.triggerMode()
   }
 
-  onFocus() {
-    this.container.appendChild(this.canvas)
+  triggerMode() {
+    this.focusMode = !this.focusMode
+    this.focusMode ? this.mount() : this.unmount()
+  }
+
+  mount() {
     this.render()
+    this.container.appendChild(this.canvas)
   }
 
-  offFocus() {
+  unmount() {
     this.container.removeChild(this.canvas)
   }
 
@@ -108,13 +111,13 @@ class focus {
   }
 
   destory() {
-    // this.canvas.removeEventListener('pointermove', this.pointermove, false)
     this.container.removeEventListener('pointermove', this.pointermove, false)
     window.removeEventListener('scroll', this.scroll, false)
     window.removeEventListener('keydown', this.keydown, false)
+    window.addEventListener('keyup', this.keyup, false)
 
-    this.focusMode && this.container.removeChild(this.canvas)
+    this.focusMode && this.unmount()
   }
 }
 
-export default focus
+export default vfocus
