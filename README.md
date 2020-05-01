@@ -12,7 +12,7 @@ The easiest way to try it is along devtools
 ```js
 var script = document.createElement('script')
 script.src =
-  'https://cdn.jsdelivr.net/npm/visual-focus@0.0.11/dist/v-focus.umd.js'
+  'https://cdn.jsdelivr.net/npm/visual-focus@0.0.12/dist/v-focus.umd.js'
 document.documentElement.append(script)
 ```
 
