@@ -12,7 +12,7 @@ The easiest way to try it is along devtools
 ```js
 var script = document.createElement('script')
 script.src =
-  'https://cdn.jsdelivr.net/npm/visual-focus@0.0.12/dist/v-focus.umd.js'
+  'https://cdn.jsdelivr.net/npm/visual-focus@0.0.14/dist/v-focus.umd.js'
 document.documentElement.append(script)
 ```
 
@@ -40,23 +40,19 @@ const v = new vfocus(options)
 
 ## Options
 
-#### container: HTMLElement (default: document.body)
-
-> canvas of container
-
-#### size: Number (default: 85)
+#### Size: Number (default: 85)
 
 > radius of focus
 
-#### focusColor: String (default: 'rgba(0, 0, 0, 0)')
+#### FocusColor: String (default: 'rgba(0, 0, 0, 0)')
 
 > color of focus
 
-#### backgroundColor: String (default: 'rgba(0, 0, 0, 0.85)')
+#### BackgroundColor: String (default: 'rgba(0, 0, 0, 0.85)')
 
 > color of background
 
-#### continuousMode: Boolean (default: true)
+#### ContinuousMode: Boolean (default: true)
 
 > if true, toggle focus-mode when press the control button each time,
 > and if false, only trigger focus-mode on keep the control button pressed down
