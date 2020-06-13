@@ -1,53 +1,58 @@
-import defaultOptions from './options.js'
-import { createCanvasContext2D } from './shared.js'
+import default_options from './options.js'
+import { create_canvas_context_2d } from './shared.js'
 
 class vfocus {
   constructor(options) {
-    this.focusMode = false
-    this.deltaScrollY = 0
-    this.pointrCoord = [0, 0]
+    this.global = window
 
-    this.options = Object.assign(defaultOptions, options || {})
-    this.container = this.options.container
-    this.hotKey = this.options.hotKey
-    this.continuousMode = this.options.continuousMode
+    this.focus_mode = false
+    this.pointer_coord = [0, 0]
 
-    const rect = this.container.getBoundingClientRect()
-    this.ctx = createCanvasContext2D([rect.width, rect.height])
+    this.options = Object.assign(default_options, options || {})
+
+    this.container = document.documentElement
+    this.size = this.options.Size || default_options.Size
+    this.hot_key = this.options.HotKey
+    this.continuous_mode = this.options.ContinuousMode
+
+    // use window outer size with fixed position
+    this.ctx = create_canvas_context_2d([
+      this.global.outerWidth,
+      this.global.outerHeight,
+    ])
     this.canvas = this.ctx.canvas
 
-    this.container.addEventListener('pointermove', this.pointermove, false)
-    window.addEventListener('scroll', this.scroll, false)
+    // initial event
+    this.canvas.addEventListener('pointermove', this.pointer_move, false)
 
-    if (this.hotKey) window.addEventListener('keydown', this.keydown, false)
-    if (this.hotKey && this.continuousMode)
-      window.addEventListener('keyup', this.keyup, false)
+    if (this.hot_key) {
+      this.global.addEventListener('keydown', this.key_down, false)
+
+      if (this.continuous_mode) {
+        this.global.addEventListener('keyup', this.key_up, false)
+      }
+    }
   }
 
-  pointermove = (event) => {
-    this.pointrCoord = [event.clientX, event.clientY + window.scrollY]
-    this.focusMode && this.render()
+  pointer_move = (event) => {
+    this.pointer_coord = [event.clientX, event.clientY]
+    this.focus_mode && this.render()
   }
 
-  scroll = () => {
-    this.pointrCoord[1] += window.scrollY - this.deltaScrollY
-    this.deltaScrollY = window.scrollY
-    this.focusMode && this.render()
+  key_down = (event) => {
+    if (event.key === this.hot_key) this.trigger_mode()
   }
 
-  keydown = (event) => {
-    if (event.key === this.hotKey) this.triggerMode()
+  key_up = (event) => {
+    if (this.continuous_mode && event.key === this.hot_key) this.trigger_mode()
   }
 
-  keyup = (event) => {
-    if (this.continuousMode && event.key === this.hotKey) this.triggerMode()
+  trigger_mode() {
+    this.focus_mode = !this.focus_mode
+    this.focus_mode ? this.mount() : this.unmount()
   }
 
-  triggerMode() {
-    this.focusMode = !this.focusMode
-    this.focusMode ? this.mount() : this.unmount()
-  }
-
+  // TODO: Can't get pointer coord before init pointermove event, so focus position always on [0, 0] when first mount
   mount() {
     this.render()
     this.container.appendChild(this.canvas)
@@ -63,60 +68,41 @@ class vfocus {
 
   render() {
     this.clear()
-    this.renderBackground()
-    this.renderFocus()
+    this.render_background()
+    this.render_focus()
   }
 
-  renderBackgroundWithoutFocus() {
-    const { canvas, ctx, options } = this
+  render_background() {
+    const { pointer_coord, size, canvas, ctx, options } = this
 
     ctx.beginPath()
 
+    ctx.arc(pointer_coord[0], pointer_coord[1], size, 0, 2 * Math.PI)
     ctx.rect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = options.backgroundColor
+    ctx.fillStyle = options.BackgroundColor
     ctx.fill('evenodd')
 
     ctx.closePath()
   }
 
-  renderBackground() {
-    const { pointrCoord, canvas, ctx, options } = this
+  render_focus() {
+    const { pointer_coord, size, ctx, options } = this
 
     ctx.beginPath()
 
-    ctx.arc(
-      pointrCoord[0],
-      pointrCoord[1],
-      options.size || defaultOptions.size,
-      0,
-      2 * Math.PI
-    )
-    ctx.rect(0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = options.backgroundColor
-    ctx.fill('evenodd')
-
-    ctx.closePath()
-  }
-
-  renderFocus() {
-    const { pointrCoord, ctx, options } = this
-
-    ctx.beginPath()
-
-    ctx.arc(pointrCoord[0], pointrCoord[1], options.size, 0, 2 * Math.PI)
-    ctx.fillStyle = options.focusColor
+    ctx.arc(pointer_coord[0], pointer_coord[1], size, 0, 2 * Math.PI)
+    ctx.fillStyle = options.FocusColor
     ctx.fill()
 
     ctx.closePath()
   }
 
   destory() {
-    this.container.removeEventListener('pointermove', this.pointermove, false)
-    window.removeEventListener('scroll', this.scroll, false)
-    window.removeEventListener('keydown', this.keydown, false)
-    window.addEventListener('keyup', this.keyup, false)
+    this.container.removeEventListener('pointermove', this.pointer_move, false)
+    this.global.removeEventListener('keydown', this.key_down, false)
+    this.global.removeEventListener('keyup', this.key_up, false)
 
-    this.focusMode && this.unmount()
+    this.focus_mode && this.unmount()
   }
 }
 

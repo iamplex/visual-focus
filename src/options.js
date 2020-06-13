@@ -3,10 +3,9 @@
  */
 
 export default {
-  container: document.body,
-  size: 85,
-  focusColor: 'rgba(0, 0, 0, 0)',
-  backgroundColor: 'rgba(0, 0, 0, 0.85)',
-  hotKey: 'Control', // TODO: support custom hotKey
-  continuousMode: true,
+  Size: 85,
+  FocusColor: 'rgba(0, 0, 0, 0)',
+  BackgroundColor: 'rgba(0, 0, 0, 0.85)',
+  HotKey: 'Control',
+  ContinuousMode: false,
 }
